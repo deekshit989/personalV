@@ -83,7 +83,7 @@
     <script>
       const player = videojs("player");
     
-      fetch("http://localhost:3000/videos")
+      fetch("https://personalv-backend.onrender.com/videos")
         .then((res) => res.json())
         .then((movies) => {
           const container = document.getElementById("movies");
