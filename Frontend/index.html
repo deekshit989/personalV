@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Movie Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #0e0e0e;
+        color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+
+      #movies {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 24px;
+        justify-content: center;
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      .movie {
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.2s ease;
+      }
+
+      .movie img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      }
+
+      .movie:hover {
+        transform: scale(1.05);
+      }
+
+      .movie-title {
+        margin-top: 8px;
+        font-size: 1em;
+        color: #f0f0f0;
+      }
+
+      #player-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+      }
+
+      #player {
+        width: 100%;
+        max-width: 960px;
+        aspect-ratio: 16 / 9;
+        border-radius: 16px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <h1>My Movie Library</h1>
+    <div id="movies"></div>
+
+    <div id="player-container">
+      <video id="player" class="video-js vjs-default-skin" controls preload="auto"></video>
+    </div>
+
+    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+    <script>
+      const player = videojs("player");
+    
+      fetch("http://localhost:3000/videos")
+        .then((res) => res.json())
+        .then((movies) => {
+          const container = document.getElementById("movies");
+    
+          movies.forEach((movie) => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "movie";
+    
+            const thumb = document.createElement("img");
+            thumb.src = movie.thumbnail;
+            thumb.alt = movie.title;
+    
+            const title = document.createElement("div");
+            title.className = "movie-title";
+            title.innerText = movie.title;
+    
+            wrapper.onclick = () => {
+              player.src(movie.url);
+              player.load();
+              player.play();
+              document.getElementById("player-container").scrollIntoView({ behavior: "smooth" });
+            };
+    
+            wrapper.appendChild(thumb);
+            wrapper.appendChild(title);
+            container.appendChild(wrapper);
+          });
+        });
+    </script>
+    
+  </body>
+</html>
